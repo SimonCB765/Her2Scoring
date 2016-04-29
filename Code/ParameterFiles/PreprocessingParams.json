@@ -1,0 +1,8 @@
+{
+    "Preprocessing" :
+    {
+        "RawImageLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/Images/Raw",
+        "CroppedImageLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/Images/Raw_Crops",
+        "OpenSlideBinLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/OpenSlide/bin"
+    }
+}
