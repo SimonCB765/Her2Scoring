@@ -4,7 +4,11 @@
 import os
 
 # 3rd party imports.
+import numpy as np
 import openslide
+import PIL.Image
+import PIL.ImageOps
+import skimage.exposure
 
 # Globals.
 RAW_CROP_LEVEL = 4  # The resolution level at which you want to perform the cropping (lower = greater resolution).
@@ -126,6 +130,10 @@ def main(arguments):
             # on visual inspection.
             fileColorCrop = "{0:s}/{1:s}_crop.png".format(dirColorImages, nameOfFile)  # Loc to save color crop.
             fileGreyCrop = "{0:s}/{1:s}_crop.png".format(dirGreyImages, nameOfFile)  # Loc to save greyscale crop.
+            fileGreyCropInverse = "{0:s}/{1:s}_inverted_crop.png".format(
+                dirGreyImages, nameOfFile)  # Loc to save inverted color greyscale crop.
+            fileGreyCropEqualised = "{0:s}/{1:s}_equalised_crop.png".format(
+                dirGreyImages, nameOfFile)  # Loc to save histogram equalised greyscale crop.
             cropParams = RAW_CROP_START_LOCS[nameOfFile]  # Locations defining the cropped area.
             fullSlideDimensions = slide.level_dimensions[0]  # Dimensions of the level 0 image.
             desiredSlideDimensions = slide.level_dimensions[RAW_CROP_LEVEL]  # Dimensions of the desired level image.
@@ -146,5 +154,23 @@ def main(arguments):
             # so as we don't really care about the background to use we can just discard the alpha channel as needed.
             rawCropColor = slide.read_region(fullCropStart, RAW_CROP_LEVEL, cropDimensions)  # Cropped image.
             rawCropColor.save(fileColorCrop)
-            rawCropGrey = rawCropColor.convert(mode='L')
+            rawCropGrey = rawCropColor.convert(mode='L')  # Create the greyscale image.
+
+            # Clean up the background of the images. The images have slightly multitonal backgrounds, with swirls in
+            # them (visible when turning the contrast up high, but also by examining the image matrix).
+            # The background color is all above approximately 220, so set anything above 220 to 255 (pure white).
+            imageArray = np.array(rawCropGrey)
+            imageArray[imageArray > 220] = 255
+            rawCropGrey = PIL.Image.fromarray(imageArray)
+
+            # Perform histogram equalisation via Contrast Limited Adaptive Histogram Equalization (CLAHE).
+            equalisedImageArray = skimage.exposure.equalize_adapthist(imageArray)
+            equalisedImageArray *= 255  # Convert from [0-1] to [0-255].
+            equalisedImageArray = equalisedImageArray.astype("uint8")  # Reset data type to 8 bit integers.
+            equalisedImage = PIL.Image.fromarray(equalisedImageArray)
+            equalisedImage.save(fileGreyCropEqualised)
+
+            # Save the greyscale images.
             rawCropGrey.save(fileGreyCrop)
+            rawCropGreyInverse = PIL.ImageOps.invert(rawCropGrey)
+            rawCropGreyInverse.save(fileGreyCropInverse)
