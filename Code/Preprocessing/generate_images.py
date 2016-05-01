@@ -91,23 +91,31 @@ def main(arguments):
 
     dirInputImages = arguments["Preprocessing"]["RawImageLocation"]
     dirOutputImages = arguments["Preprocessing"]["RawThumbnailImageLocation"]
+    dirColorImages = dirOutputImages + "/Color"
+    dirGreyImages = dirOutputImages + "/Greyscale"
 
     for i in os.listdir(dirInputImages):
+        # Determine the file being processed, and where to save the processed images.
         nameOfFile = i.split('.')[0].lower()  # Strip off the file extension.
-        fileRawImage = "{0:s}/{1:s}".format(dirInputImages, i)
-        fileThumbnail = "{0:s}/{1:s}.png".format(dirOutputImages, nameOfFile)
+        fileRawImage = "{0:s}/{1:s}".format(dirInputImages, i)  # Location of the raw WSI.
+        fileColorThumbnail = "{0:s}/{1:s}.png".format(dirColorImages, nameOfFile)  # Loc to save the color thumbnail.
+        fileGreyThumbnail = "{0:s}/{1:s}.png".format(dirGreyImages, nameOfFile)  # Loc to save the greyscale thumbnail.
+
+        # Display status message.
+        print("Now processing image {0:s}".format(nameOfFile))
 
         # Generate a thumbnail of the file.
         slide = openslide.OpenSlide(fileRawImage)
-        thumbnail = slide.get_thumbnail((1000, 1000))
-        thumbnail.save(fileThumbnail)
-
-        print(nameOfFile)
+        thumbnailColor = slide.get_thumbnail((1000, 1000))
+        thumbnailColor.save(fileColorThumbnail)
+        thumbnailGrey = thumbnailColor.convert(mode='L')
+        thumbnailGrey.save(fileGreyThumbnail)
 
         if nameOfFile in RAW_CROP_START_LOCS:
             # If the file is an IHC slide, then generate a cropped thumbnail of it. The cropping is based
             # on visual inspection.
-            fileThumbnailCrop = "{0:s}/{1:s}_crop.png".format(dirOutputImages, nameOfFile)
+            fileColorCrop = "{0:s}/{1:s}_crop.png".format(dirColorImages, nameOfFile)  # Loc to save color crop.
+            fileGreyCrop = "{0:s}/{1:s}_crop.png".format(dirGreyImages, nameOfFile)  # Loc to save greyscale crop.
             cropParams = RAW_CROP_START_LOCS[nameOfFile]  # Locations defining the cropped area.
             fullSlideDimensions = slide.level_dimensions[0]  # Dimensions of the level 0 image.
             desiredSlideDimensions = slide.level_dimensions[RAW_CROP_LEVEL]  # Dimensions of the desired level image.
@@ -123,5 +131,7 @@ def main(arguments):
                               cropParams[1][1] * desiredSlideDimensions[1])
             cropDimensions = (desiredCropEnd[0] - desiredCropStart[0], desiredCropEnd[1] - desiredCropStart[1])
             cropDimensions = [int(i) for i in cropDimensions]  # Dimension of the crop in the desired level image.
-            rawCrop = slide.read_region(fullCropStart, RAW_CROP_LEVEL, cropDimensions)  # Cropped image.
-            rawCrop.save(fileThumbnailCrop)
+            rawCropColor = slide.read_region(fullCropStart, RAW_CROP_LEVEL, cropDimensions)  # Cropped image.
+            rawCropColor.save(fileColorCrop)
+            rawCropGrey = rawCropColor.convert(mode='L')
+            rawCropGrey.save(fileGreyCrop)
