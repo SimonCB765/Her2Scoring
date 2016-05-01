@@ -92,7 +92,17 @@ def main(arguments):
     dirInputImages = arguments["Preprocessing"]["RawImageLocation"]
     dirOutputImages = arguments["Preprocessing"]["RawThumbnailImageLocation"]
     dirColorImages = dirOutputImages + "/Color"
+    try:
+        os.makedirs(dirColorImages)
+    except FileExistsError:
+        # Directory already exists.
+        pass
     dirGreyImages = dirOutputImages + "/Greyscale"
+    try:
+        os.makedirs(dirGreyImages)
+    except FileExistsError:
+        # Directory already exists.
+        pass
 
     for i in os.listdir(dirInputImages):
         # Determine the file being processed, and where to save the processed images.
@@ -104,7 +114,7 @@ def main(arguments):
         # Display status message.
         print("Now processing image {0:s}".format(nameOfFile))
 
-        # Generate a thumbnail of the file.
+        # Generate a thumbnail of the file. The thumbnail returned by get_thumbnail is RGB.
         slide = openslide.OpenSlide(fileRawImage)
         thumbnailColor = slide.get_thumbnail((1000, 1000))
         thumbnailColor.save(fileColorThumbnail)
@@ -131,6 +141,9 @@ def main(arguments):
                               cropParams[1][1] * desiredSlideDimensions[1])
             cropDimensions = (desiredCropEnd[0] - desiredCropStart[0], desiredCropEnd[1] - desiredCropStart[1])
             cropDimensions = [int(i) for i in cropDimensions]  # Dimension of the crop in the desired level image.
+
+            # Generate the crop. The read_region function returns a non-premultiplied image (only in the Python API),
+            # so as we don't really care about the background to use we can just discard the alpha channel as needed.
             rawCropColor = slide.read_region(fullCropStart, RAW_CROP_LEVEL, cropDimensions)  # Cropped image.
             rawCropColor.save(fileColorCrop)
             rawCropGrey = rawCropColor.convert(mode='L')
