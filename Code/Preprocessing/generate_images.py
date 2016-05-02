@@ -8,7 +8,6 @@ import numpy as np
 import openslide
 import PIL.Image
 import PIL.ImageOps
-import skimage.exposure
 
 # Globals.
 RAW_CROP_LEVEL = 4  # The resolution level at which you want to perform the cropping (lower = greater resolution).
@@ -162,13 +161,6 @@ def main(arguments):
             imageArray = np.array(rawCropGrey)
             imageArray[imageArray > 220] = 255
             rawCropGrey = PIL.Image.fromarray(imageArray)
-
-            # Perform histogram equalisation via Contrast Limited Adaptive Histogram Equalization (CLAHE).
-            equalisedImageArray = skimage.exposure.equalize_adapthist(imageArray)
-            equalisedImageArray *= 255  # Convert from [0-1] to [0-255].
-            equalisedImageArray = equalisedImageArray.astype("uint8")  # Reset data type to 8 bit integers.
-            equalisedImage = PIL.Image.fromarray(equalisedImageArray)
-            equalisedImage.save(fileGreyCropEqualised)
 
             # Save the greyscale images.
             rawCropGrey.save(fileGreyCrop)
