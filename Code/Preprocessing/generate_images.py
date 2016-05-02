@@ -22,65 +22,57 @@ RAW_CROP_START_LOCS = {
     # (X1*200, Y1*200) to (X2*200, Y2*200).
 
     "1_her2": [(0.0, 0.0), (1.0, 1.0)],  # The crop is the same as the full image.
-    "4_her2": [(0.5, 0.0), (1.0, 1.0)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
-    #"6_her2": [(0.5, 0.0), (1.0, 1.0)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
-    "6_her2": [(0.8, 0.0), (1.0, 1.0)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
-    #"9_her2": [(0.5, 0.0), (1.0, 1.0)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
-    "9_her2": [(0.7, 0.0), (1.0, 1.0)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
-    #"11_her2": [(0.5, 0.0), (1.0, 1.0)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
-    "11_her2": [(0.8, 0.0), (1.0, 1.0)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
-    #"12_her2": [(0.5, 0.0), (1.0, 1.0)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
-    "12_her2": [(0.8, 0.0), (1.0, 1.0)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
-    #"13_her2": [(0.5, 0.0), (1.0, 1.0)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
-    "13_her2": [(0.8, 0.0), (1.0, 1.0)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
-    #"14_her2": [(0.5, 0.0), (1.0, 1.0)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
-    "14_her2": [(0.8, 0.0), (1.0, 1.0)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
+    "4_her2": [(0.7, 0.05), (1.0, 0.8)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
+    "6_her2": [(0.6, 0.0), (1.0, 1.0)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
+    "9_her2": [(0.6, 0.0), (1.0, 1.0)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
+    "11_her2": [(0.7, 0.2), (0.95, 0.9)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
+    "12_her2": [(0.7, 0.1), (1.0, 0.7)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
+    "13_her2": [(0.7, 0.0), (1.0, 1.0)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
+    "14_her2": [(0.6, 0.1), (1.0, 0.9)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
     "15_her2": [(0.5, 0.0), (1.0, 1.0)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
-    #"16_her2": [(0.5, 0.0), (1.0, 1.0)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
-    "16_her2": [(0.8, 0.0), (1.0, 1.0)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
-    #"18_her2": [(0.0, 0.0), (0.5, 1.0)],  # Start in the top left corner and end in the middle of the bottom edge (remove the RHS).
-    "18_her2": [(0.0, 0.0), (0.3, 1.0)],  # Start in the top left corner and end in the middle of the bottom edge (remove the RHS).
-    "19_her2": [(0.0, 0.0), (0.4, 1.0)],
-    "22_her2": [(0.0, 0.0), (0.6, 1.0)],
-    "24_her2": [(0.5, 0.0), (1.0, 1.0)],
-    "25_her2": [(0.0, 0.0), (0.4, 1.0)],
-    "26_her2": [(0.0, 0.0), (0.9, 1.0)],
-    "27_her2": [(0.0, 0.0), (0.4, 1.0)],
-    "29_her2": [(0.0, 0.0), (0.4, 1.0)],
-    "30_her2": [(0.0, 0.0), (0.4, 1.0)],
-    "32_her2": [(0.0, 0.0), (0.5, 1.0)],
-    "33_her2": [(0.0, 0.0), (0.5, 1.0)],
-    "34_her2": [(0.5, 0.0), (1.0, 1.0)],
-    "35_her2": [(0.3, 0.0), (1.0, 1.0)],
-    "36_her2": [(0.0, 0.0), (0.5, 1.0)],
-    "38_her2": [(0.0, 0.0), (0.5, 1.0)],
-    "39_her2": [(0.5, 0.0), (1.0, 1.0)],
-    "40_her2": [(0.0, 0.0), (0.5, 1.0)],
-    "46_her2": [(0.0, 0.0), (0.7, 1.0)],
-    "47_her2": [(0.5, 0.0), (1.0, 1.0)],
-    "48_her2": [(0.5, 0.0), (1.0, 1.0)],
-    "49_her2": [(0.0, 0.0), (0.5, 1.0)],
-    "50_her2": [(0.4, 0.0), (1.0, 1.0)],
-    "52_her2": [(0.5, 0.0), (1.0, 1.0)],
-    "55_her2": [(0.5, 0.0), (1.0, 1.0)],
-    "57_her2": [(0.4, 0.0), (1.0, 1.0)],
-    "58_her2": [(0.4, 0.0), (1.0, 1.0)],
-    "61_her2": [(0.4, 0.0), (1.0, 1.0)],
-    "63_her2": [(0.0, 0.0), (0.5, 1.0)],
-    "65_her2": [(0.0, 0.0), (1.0, 1.0)],
-    "66_her2": [(0.5, 0.0), (1.0, 1.0)],
-    "67_her2": [(0.5, 0.0), (1.0, 1.0)],
-    "68_her2": [(0.0, 0.0), (0.8, 1.0)],
-    "70_her2": [(0.0, 0.0), (0.5, 1.0)],
-    "73_her2": [(0.0, 0.0), (0.6, 1.0)],
-    "74_her2": [(0.5, 0.0), (1.0, 1.0)],
-    "79_her2": [(0.5, 0.0), (1.0, 1.0)],
-    "82_her2": [(0.5, 0.0), (1.0, 1.0)],
-    "83_her2": [(0.0, 0.0), (0.5, 1.0)],
-    "84_her2": [(0.5, 0.0), (1.0, 1.0)],
-    "86_her2": [(0.5, 0.0), (1.0, 1.0)],
-    "87_her2": [(0.0, 0.0), (0.5, 1.0)],
-    "88_her2": [(0.0, 0.0), (0.5, 1.0)]
+    "16_her2": [(0.6, 0.2), (1.0, 1.0)],  # Start in the middle of the top edge; end in the bottom right corner (remove the LHS).
+    "18_her2": [(0.1, 0.0), (0.4, 0.9)],  # Start in the top left corner and end in the middle of the bottom edge (remove the RHS).
+    "19_her2": [(0.7, 0.0), (1.0, 1.0)],
+    "22_her2": [(0.0, 0.0), (0.55, 1.0)],
+    "24_her2": [(0.6, 0.0), (1.0, 1.0)],
+    "25_her2": [(0.0, 0.0), (0.3, 0.9)],
+    "26_her2": [(0.0, 0.0), (0.8, 1.0)],
+    "27_her2": [(0.0, 0.0), (0.3, 1.0)],
+    "29_her2": [(0.0, 0.0), (0.3, 1.0)],
+    "30_her2": [(0.0, 0.0), (0.3, 0.8)],
+    "32_her2": [(0.1, 0.2), (0.4, 1.0)],
+    "33_her2": [(0.0, 0.0), (0.45, 1.0)],
+    "34_her2": [(0.7, 0.0), (1.0, 1.0)],
+    "35_her2": [(0.4, 0.0), (1.0, 0.9)],
+    "36_her2": [(0.0, 0.0), (0.45, 1.0)],
+    "38_her2": [(0.0, 0.0), (0.4, 0.9)],
+    "39_her2": [(0.5, 0.0), (1.0, 0.9)],
+    "40_her2": [(0.0, 0.0), (0.3, 1.0)],
+    "46_her2": [(0.0, 0.0), (0.5, 1.0)],
+    "47_her2": [(0.6, 0.0), (1.0, 1.0)],
+    "48_her2": [(0.6, 0.0), (1.0, 1.0)],
+    "49_her2": [(0.0, 0.0), (0.4, 1.0)],
+    "50_her2": [(0.5, 0.0), (1.0, 1.0)],
+    "52_her2": [(0.7, 0.0), (1.0, 1.0)],
+    "55_her2": [(0.6, 0.0), (1.0, 1.0)],
+    "57_her2": [(0.5, 0.0), (1.0, 1.0)],
+    "58_her2": [(0.6, 0.0), (1.0, 1.0)],
+    "61_her2": [(0.5, 0.0), (1.0, 1.0)],
+    "63_her2": [(0.0, 0.1), (0.4, 0.9)],
+    "65_her2": [(0.1, 0.0), (1.0, 1.0)],
+    "66_her2": [(0.6, 0.0), (1.0, 1.0)],
+    "67_her2": [(0.7, 0.0), (1.0, 1.0)],
+    "68_her2": [(0.2, 0.1), (0.7, 0.9)],
+    "70_her2": [(0.0, 0.0), (0.4, 0.9)],
+    "73_her2": [(0.0, 0.0), (0.55, 0.8)],
+    "74_her2": [(0.7, 0.0), (1.0, 1.0)],
+    "79_her2": [(0.6, 0.0), (1.0, 1.0)],
+    "82_her2": [(0.7, 0.0), (1.0, 1.0)],
+    "83_her2": [(0.0, 0.0), (0.45, 0.9)],
+    "84_her2": [(0.6, 0.0), (1.0, 1.0)],
+    "86_her2": [(0.6, 0.0), (1.0, 1.0)],
+    "87_her2": [(0.0, 0.0), (0.35, 1.0)],
+    "88_her2": [(0.0, 0.0), (0.45, 1.0)]
 }
 
 
@@ -131,8 +123,6 @@ def main(arguments):
             fileGreyCrop = "{0:s}/{1:s}_crop.png".format(dirGreyImages, nameOfFile)  # Loc to save greyscale crop.
             fileGreyCropInverse = "{0:s}/{1:s}_inverted_crop.png".format(
                 dirGreyImages, nameOfFile)  # Loc to save inverted color greyscale crop.
-            fileGreyCropEqualised = "{0:s}/{1:s}_equalised_crop.png".format(
-                dirGreyImages, nameOfFile)  # Loc to save histogram equalised greyscale crop.
             cropParams = RAW_CROP_START_LOCS[nameOfFile]  # Locations defining the cropped area.
             fullSlideDimensions = slide.level_dimensions[0]  # Dimensions of the level 0 image.
             desiredSlideDimensions = slide.level_dimensions[RAW_CROP_LEVEL]  # Dimensions of the desired level image.
