@@ -9,6 +9,16 @@ import openslide
 import PIL.Image
 import PIL.ImageOps
 
+# User imports.
+from . import clean_image
+
+# Extras.
+from matplotlib import pyplot as plt
+import skimage.filters
+import scipy.spatial
+import skimage.morphology
+import scipy.ndimage
+
 # Globals.
 RAW_CROP_LEVEL = 4  # The resolution level at which you want to perform the cropping (lower = greater resolution).
 RAW_CROP_START_LOCS = {
@@ -139,18 +149,24 @@ def main(arguments):
             cropDimensions = (desiredCropEnd[0] - desiredCropStart[0], desiredCropEnd[1] - desiredCropStart[1])
             cropDimensions = [int(i) for i in cropDimensions]  # Dimension of the crop in the desired level image.
 
-            # Generate the crop. The read_region function returns a non-premultiplied image (only in the Python API),
-            # so as we don't really care about the background to use we can just discard the alpha channel as needed.
+            # Generate the crop. The read_region function returns a non-premultiplied image (only in the Python API).
+            # Since the relative colors are of most interest, we can just discard the alpha channel.
             rawCropColor = slide.read_region(fullCropStart, RAW_CROP_LEVEL, cropDimensions)  # Cropped image.
             rawCropColor.save(fileColorCrop)
             rawCropGrey = rawCropColor.convert(mode='L')  # Create the greyscale image.
 
-            # Clean up the background of the images. The images have slightly multitonal backgrounds, with swirls in
-            # them (visible when turning the contrast up high, but also by examining the image matrix).
-            # The background color is all above approximately 220, so set anything above 220 to 255 (pure white).
+            # Clean up the image. Do this by identifying the regions in the original image that contain pixels
+            # of interest, and setting all other pixels to white (255).
+            # Use 220 as the value for thresholding as the images have slightly multitonal backgrounds
+            # (visible when turning the contrast up high, but also by examining the image matrix).
+            # The background color is all above approximately 220, so treat anything above 220 as background.
             imageArray = np.array(rawCropGrey)
-            imageArray[imageArray > 220] = 255
-            rawCropGrey = PIL.Image.fromarray(imageArray)
+            finalImage = clean_image.main(imageArray, backgroundThreshold=220,
+                                          maxFilterSize=9,
+                                          objectsToUse=[1, 2, 3, 4, 5],
+                                          visualise=False)
+            rawCropGrey = PIL.Image.fromarray(finalImage)
+            rawCropGrey = rawCropGrey.convert(mode='L')
 
             # Save the greyscale images.
             rawCropGrey.save(fileGreyCrop)
