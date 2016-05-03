@@ -10,17 +10,9 @@ import PIL.Image
 import PIL.ImageOps
 
 # User imports.
-from . import clean_image
-
-# Extras.
-from matplotlib import pyplot as plt
-import skimage.filters
-import scipy.spatial
-import skimage.morphology
-import scipy.ndimage
+from . import create_image_mask
 
 # Globals.
-RAW_CROP_LEVEL = 4  # The resolution level at which you want to perform the cropping (lower = greater resolution).
 RAW_CROP_START_LOCS = {
     # Fractional coordinates for the cropping of the raw WSI files, and the direction (left or right hand side) from
     # which the coordinates should be calculated.
@@ -94,8 +86,8 @@ def main(arguments):
 
     """
 
-    dirInputImages = arguments["Preprocessing"]["RawImageLocation"]
-    dirOutputImages = arguments["Preprocessing"]["RawThumbnailImageLocation"]
+    dirInputImages = arguments["RawImageLocation"]
+    dirOutputImages = arguments["RawThumbnailImageLocation"]
     dirColorImages = dirOutputImages + "/Color"
     try:
         os.makedirs(dirColorImages)
@@ -108,6 +100,7 @@ def main(arguments):
     except FileExistsError:
         # Directory already exists.
         pass
+    rawCropLevel = arguments["RawCropLevel"]  # The resolution level at which you want to perform the cropping.
 
     for i in os.listdir(dirInputImages):
         # Determine the file being processed, and where to save the processed images.
@@ -135,7 +128,7 @@ def main(arguments):
                 dirGreyImages, nameOfFile)  # Loc to save inverted color greyscale crop.
             cropParams = RAW_CROP_START_LOCS[nameOfFile]  # Locations defining the cropped area.
             fullSlideDimensions = slide.level_dimensions[0]  # Dimensions of the level 0 image.
-            desiredSlideDimensions = slide.level_dimensions[RAW_CROP_LEVEL]  # Dimensions of the desired level image.
+            desiredSlideDimensions = slide.level_dimensions[rawCropLevel]  # Dimensions of the desired level image.
 
             # Determine crop start location and dimensions.
             # The starting location of the crop is relative to the level 0 image, while the dimension of the crop
@@ -150,25 +143,31 @@ def main(arguments):
             cropDimensions = [int(i) for i in cropDimensions]  # Dimension of the crop in the desired level image.
 
             # Generate the crop. The read_region function returns a non-premultiplied image (only in the Python API).
-            # Since the relative colors are of most interest, we can just discard the alpha channel.
-            rawCropColor = slide.read_region(fullCropStart, RAW_CROP_LEVEL, cropDimensions)  # Cropped image.
-            rawCropColor.save(fileColorCrop)
+            rawCropColor = slide.read_region(fullCropStart, rawCropLevel, cropDimensions)  # Cropped image.
+            rawColorImageArray = np.array(rawCropColor)
             rawCropGrey = rawCropColor.convert(mode='L')  # Create the greyscale image.
+            rawGreyImageArray = np.array(rawCropGrey)
 
-            # Clean up the image. Do this by identifying the regions in the original image that contain pixels
-            # of interest, and setting all other pixels to white (255).
+            # Create the mask needed to clean up the image. Do this by identifying the regions in the original image
+            # that contain pixels of interest, and creating a boolean mask to apply to the raw images.
             # Use 220 as the value for thresholding as the images have slightly multitonal backgrounds
             # (visible when turning the contrast up high, but also by examining the image matrix).
             # The background color is all above approximately 220, so treat anything above 220 as background.
-            imageArray = np.array(rawCropGrey)
-            finalImage = clean_image.main(imageArray, backgroundThreshold=220,
-                                          maxFilterSize=9,
-                                          objectsToUse=[1, 2, 3, 4, 5],
-                                          visualise=False)
-            rawCropGrey = PIL.Image.fromarray(finalImage)
-            rawCropGrey = rawCropGrey.convert(mode='L')
+            mask = create_image_mask.main(rawGreyImageArray, backgroundThreshold=220, maxFilterSize=9,
+                                          objectsToUse=[1, 2, 3, 4, 5], visualise=False)
 
-            # Save the greyscale images.
-            rawCropGrey.save(fileGreyCrop)
-            rawCropGreyInverse = PIL.ImageOps.invert(rawCropGrey)
-            rawCropGreyInverse.save(fileGreyCropInverse)
+            # Create the cleaned images.
+            for j in range(rawColorImageArray.shape[2]):
+                # Apply the mask to each channel of the RGBA image.
+                rawColorImageArray[:, :, j] *= mask
+            rawGreyImageArray *= mask
+            rawGreyImageArray[rawGreyImageArray == 0] = 255  # Set all pixels that aren't of interest to white.
+
+            # Save the images.
+            cleanCropColor = PIL.Image.fromarray(rawColorImageArray)
+            cleanCropColor.save(fileColorCrop)
+            cleanCropGrey = PIL.Image.fromarray(rawGreyImageArray)
+            cleanCropGrey = cleanCropGrey.convert(mode='L')
+            cleanCropGrey.save(fileGreyCrop)
+            cleanCropGreyInverse = PIL.ImageOps.invert(cleanCropGrey)
+            cleanCropGreyInverse.save(fileGreyCropInverse)

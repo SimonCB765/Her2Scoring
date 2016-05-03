@@ -1,4 +1,4 @@
-"""Clean an image by selecting only those pixels in regions of interest."""
+"""Functions to generate masks that select only those pixels in regions of interest."""
 
 # 3rd party imports.
 from matplotlib import pyplot as plt
@@ -61,14 +61,14 @@ def main(imageArray, backgroundThreshold=255, maxFilterSize=5, objectsToUse=(1,)
             plt.imshow(labeledObjectArray == objectsSortedByPixels[i], cmap='Greys_r')
             plt.show()
 
-    # Generate the final image.
-    # As the dilated binary image contains pixels surrounding the region of interest, this will cause a halo of
-    # pixels around the image. However, these pixels are white and will get subsumed into the white
-    # background, thereby making them indistinguishable from the background.
-    finalImage = imageArray * mask
-    finalImage[finalImage == 0] = 255
+    # View the final image if needed.
     if visualise:
         # Visualise the image containing only the selected regions of interest.
+        # As the dilated binary image contains pixels surrounding the region of interest, this will cause a halo of
+        # pixels around the image. However, these pixels are white and will get subsumed into the white
+        # background, thereby making them indistinguishable from the background.
+        finalImage = imageArray * mask
+        finalImage[finalImage == 0] = 255
         fig = plt.figure()
         axes = fig.add_subplot(1, 3, 1)
         axes.set_title("Input Image")
@@ -81,4 +81,4 @@ def main(imageArray, backgroundThreshold=255, maxFilterSize=5, objectsToUse=(1,)
         plt.imshow(finalImage, cmap='Greys_r')
         plt.show()
 
-    return finalImage
+    return mask

@@ -1,8 +1,6 @@
 {
-    "Preprocessing" :
-    {
-        "RawImageLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/Images/Raw",
-        "RawThumbnailImageLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/Images/Raw_Thumbnails",
-        "OpenSlideBinLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/OpenSlide/bin"
-    }
+    "RawImageLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/Images/Raw",
+    "RawThumbnailImageLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/Images/Raw_Thumbnails",
+    "OpenSlideBinLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/OpenSlide/bin",
+    "RawCropLevel" : 4
 }
