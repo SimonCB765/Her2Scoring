@@ -1,4 +1,4 @@
-"""Functions to generate masks that select only those pixels in regions of interest."""
+"""Function to generate a mask that selects only those pixels in regions of interest."""
 
 # 3rd party imports.
 from matplotlib import pyplot as plt
@@ -19,6 +19,8 @@ def main(imageArray, backgroundThreshold=255, maxFilterSize=5, objectsToUse=(1,)
     object 0 is always the backgournd, so unless you want that in it do not put 0 in objectsToUse
     objects to use is done by size, so 1 means keep the biggest object, 2 the 2nd biggest etc.
 
+    returns a image mask with True values for the pixels in regions of interest and False values everywhere else
+
     """
 
     # First convert the greyscale image to a binary image by thresholding the image based on pixel value.
@@ -31,13 +33,10 @@ def main(imageArray, backgroundThreshold=255, maxFilterSize=5, objectsToUse=(1,)
     # regions have large 'holes' a larger filter is needed.
     binaryImageArray = scipy.ndimage.maximum_filter(binaryImageArray, size=maxFilterSize, mode="constant", cval=0)
 
-    # Label the objects, and get the counts of how many pixels are in each object.
-
     # Label all 'objects' in the image in order to segment it. The labeled image is the same size as the input image,
     # but each pixel belonging to an object is numbered with the numeric value given to that object.
     # Use a full 8 neighbour neighbourhood to determine whether pixels belong to the same object.
     labeledObjectArray = skimage.morphology.label(binaryImageArray, background=0, connectivity=None)
-    #labeledObjectArray, numLabels = scipy.ndimage.label(binaryImageArray, [[1, 1, 1], [1, 1, 1], [1, 1, 1]])
 
     # Next get the actual integers used to label the objects, and the number of pixels in the corresponding object.
     labels, labelCounts = np.unique(labeledObjectArray, return_counts=True)
