@@ -31,12 +31,12 @@ def main(imageArray, backgroundThreshold=255, maxFilterSize=5, objectsToUse=(1,)
     # pixels. This is not needed, but will make the segmenter have an easier time locating large regions of interest.
     # If the regions of interest have few 'holes' in them, then a small max filter can be used. For images where the
     # regions have large 'holes' a larger filter is needed.
-    binaryImageArray = scipy.ndimage.maximum_filter(binaryImageArray, size=maxFilterSize, mode="constant", cval=0)
+    dilatedImageArray = scipy.ndimage.maximum_filter(binaryImageArray, size=maxFilterSize, mode="constant", cval=0)
 
     # Label all 'objects' in the image in order to segment it. The labeled image is the same size as the input image,
     # but each pixel belonging to an object is numbered with the numeric value given to that object.
     # Use a full 8 neighbour neighbourhood to determine whether pixels belong to the same object.
-    labeledObjectArray = skimage.morphology.label(binaryImageArray, background=0, connectivity=None)
+    labeledObjectArray = skimage.morphology.label(dilatedImageArray, background=0, connectivity=None)
 
     # Next get the actual integers used to label the objects, and the number of pixels in the corresponding object.
     labels, labelCounts = np.unique(labeledObjectArray, return_counts=True)
@@ -60,12 +60,11 @@ def main(imageArray, backgroundThreshold=255, maxFilterSize=5, objectsToUse=(1,)
             plt.imshow(labeledObjectArray == objectsSortedByPixels[i], cmap='Greys_r')
             plt.show()
 
-    # View the final image if needed.
+    # Remove the portions of the mask that are only present due to the dilation.
+    mask &= binaryImageArray
+
+    # View the final image containing only the selected regions of interest.
     if visualise:
-        # Visualise the image containing only the selected regions of interest.
-        # As the dilated binary image contains pixels surrounding the region of interest, this will cause a halo of
-        # pixels around the image. However, these pixels are white and will get subsumed into the white
-        # background, thereby making them indistinguishable from the background.
         finalImage = imageArray * mask
         finalImage[finalImage == 0] = 255
         fig = plt.figure()
