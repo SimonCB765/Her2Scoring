@@ -157,11 +157,16 @@ def main(arguments):
                                           objectsToUse=[1, 2, 3, 4, 5], visualise=False)
 
             # Create the cleaned images.
-            for j in range(rawColorImageArray.shape[2]):
-                # Apply the mask to each channel of the RGBA image.
-                rawColorImageArray[:, :, j] *= mask
+            rawColorImageArray[:, :, -1] *= mask  # Set alpha to invisible to hide the background.
             rawGreyImageArray *= mask
             rawGreyImageArray[rawGreyImageArray == 0] = 255  # Set all pixels that aren't of interest to white.
+
+            # Process the cleaned images to remove all rows and columns containing only background pixels.
+            # This will shrink the final size of the image.
+            backgroundRows = np.all(mask == False, axis=1)
+            backgroundCols = np.all(mask == False, axis=0)
+            rawColorImageArray = rawColorImageArray[~backgroundRows, :][:, ~backgroundCols]
+            rawGreyImageArray = rawGreyImageArray[~backgroundRows, :][:, ~backgroundCols]
 
             # Save the images.
             cleanCropColor = PIL.Image.fromarray(rawColorImageArray)
