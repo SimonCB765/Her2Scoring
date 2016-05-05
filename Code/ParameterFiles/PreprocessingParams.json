@@ -1,6 +1,6 @@
 {
     "RawImageLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/Images/Raw",
-    "RawThumbnailImageLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/Images/Raw_Thumbnails",
+    "CleanedImageLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/Images/Cleaned",
     "OpenSlideBinLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/OpenSlide/bin",
     "RawCropLevel" : 4
 }

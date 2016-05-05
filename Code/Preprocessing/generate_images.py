@@ -86,17 +86,38 @@ def main(arguments):
 
     """
 
+    # Parse parameters and set up result directories.
     dirInputImages = arguments["RawImageLocation"]
-    dirOutputImages = arguments["RawThumbnailImageLocation"]
+    dirOutputImages = arguments["CleanedImageLocation"]
     dirColorImages = dirOutputImages + "/Color"
+    dirColorThumbnails = dirColorImages + "/Thumbnails"
     try:
-        os.makedirs(dirColorImages)
+        os.makedirs(dirColorThumbnails)
+    except FileExistsError:
+        # Directory already exists.
+        pass
+    dirColorCrops = dirColorImages + "/CroppedImages"
+    try:
+        os.makedirs(dirColorCrops)
     except FileExistsError:
         # Directory already exists.
         pass
     dirGreyImages = dirOutputImages + "/Greyscale"
+    dirGreyThumbnails = dirGreyImages + "/Thumbnails"
     try:
-        os.makedirs(dirGreyImages)
+        os.makedirs(dirGreyThumbnails)
+    except FileExistsError:
+        # Directory already exists.
+        pass
+    dirGreyCrops = dirGreyImages + "/CroppedImages"
+    try:
+        os.makedirs(dirGreyCrops)
+    except FileExistsError:
+        # Directory already exists.
+        pass
+    dirGreyInvertedCrops = dirGreyImages + "/InvertedCroppedImages"
+    try:
+        os.makedirs(dirGreyInvertedCrops)
     except FileExistsError:
         # Directory already exists.
         pass
@@ -106,8 +127,8 @@ def main(arguments):
         # Determine the file being processed, and where to save the processed images.
         nameOfFile = i.split('.')[0].lower()  # Strip off the file extension.
         fileRawImage = "{0:s}/{1:s}".format(dirInputImages, i)  # Location of the raw WSI.
-        fileColorThumbnail = "{0:s}/{1:s}.png".format(dirColorImages, nameOfFile)  # Loc to save the color thumbnail.
-        fileGreyThumbnail = "{0:s}/{1:s}.png".format(dirGreyImages, nameOfFile)  # Loc to save the greyscale thumbnail.
+        fileColorThumbnail = "{0:s}/{1:s}.png".format(dirColorThumbnails, nameOfFile)  # Loc to save the color thumbnail.
+        fileGreyThumbnail = "{0:s}/{1:s}.png".format(dirGreyThumbnails, nameOfFile)  # Loc to save the greyscale thumbnail.
 
         # Display status message.
         print("Now processing image {0:s}".format(nameOfFile))
@@ -122,10 +143,10 @@ def main(arguments):
         if nameOfFile in RAW_CROP_START_LOCS:
             # If the file is an IHC slide, then generate a cropped thumbnail of it. The cropping is based
             # on visual inspection.
-            fileColorCrop = "{0:s}/{1:s}_crop.png".format(dirColorImages, nameOfFile)  # Loc to save color crop.
-            fileGreyCrop = "{0:s}/{1:s}_crop.png".format(dirGreyImages, nameOfFile)  # Loc to save greyscale crop.
+            fileColorCrop = "{0:s}/{1:s}_crop.png".format(dirColorCrops, nameOfFile)  # Loc to save color crop.
+            fileGreyCrop = "{0:s}/{1:s}_crop.png".format(dirGreyCrops, nameOfFile)  # Loc to save greyscale crop.
             fileGreyCropInverse = "{0:s}/{1:s}_inverted_crop.png".format(
-                dirGreyImages, nameOfFile)  # Loc to save inverted color greyscale crop.
+                dirGreyInvertedCrops, nameOfFile)  # Loc to save inverted color greyscale crop.
             cropParams = RAW_CROP_START_LOCS[nameOfFile]  # Locations defining the cropped area.
             fullSlideDimensions = slide.level_dimensions[0]  # Dimensions of the level 0 image.
             desiredSlideDimensions = slide.level_dimensions[rawCropLevel]  # Dimensions of the desired level image.
