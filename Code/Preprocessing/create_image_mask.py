@@ -4,7 +4,7 @@
 from matplotlib import pyplot as plt
 import numpy as np
 import scipy.ndimage
-import skimage.morphology
+import skimage.measure
 
 
 def main(imageArray, backgroundThreshold=255, maxFilterSize=5, objectsToUse=(1,), visualise=False):
@@ -36,7 +36,7 @@ def main(imageArray, backgroundThreshold=255, maxFilterSize=5, objectsToUse=(1,)
     # Label all 'objects' in the image in order to segment it. The labeled image is the same size as the input image,
     # but each pixel belonging to an object is numbered with the numeric value given to that object.
     # Use a full 8 neighbour neighbourhood to determine whether pixels belong to the same object.
-    labeledObjectArray = skimage.morphology.label(dilatedImageArray, background=0, connectivity=None)
+    labeledObjectArray = skimage.measure.label(dilatedImageArray, background=0, connectivity=None)
 
     # Next get the actual integers used to label the objects, and the number of pixels in the corresponding object.
     labels, labelCounts = np.unique(labeledObjectArray, return_counts=True)
