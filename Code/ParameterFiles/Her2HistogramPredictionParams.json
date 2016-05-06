@@ -1,5 +1,5 @@
 {
-    "ImageLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/Images/Cleaned/CroppedImages",
+    "ImageLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/Images/Cleaned/Greyscale/CroppedImages",
     "BackgroundColor" : 255,
     "GroundTruth" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/GroundTruth.tsv"
 }

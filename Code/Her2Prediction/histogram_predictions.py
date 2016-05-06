@@ -4,9 +4,15 @@
 import os
 import sys
 
+# 3rd party imports.
+import numpy as np
+import scipy.ndimage
+
 
 def main(arguments):
     """
+
+    Assumes 8 bit greyscale or color images.
 
     :param arguments:   The Her2 histogram prediction arguments in JSON format.
     :type arguments:    JSON object
@@ -36,3 +42,17 @@ def main(arguments):
 
     # Go through each image, generate the histogram of all pixels intensities from 0-255 and then remove
     # the intensity from the background. This is your feature vector.
+
+    # Determine the mask for removing the background pixel color.
+    backgroundMask = np.array([(False if i == backgroundColor else True) for i in range(256)])
+
+    for i in os.listdir(dirImages):
+        # Read in the file.
+        filePath = "{0:s}/{1:s}".format(dirImages, i)
+        image = scipy.ndimage.imread(filePath)
+
+        # Generate the histogram. One bin per color value.
+        histogram = scipy.ndimage.histogram(image, 0, 255, 256)
+
+        # Strip out the background color.
+        histogram = histogram[backgroundMask]
