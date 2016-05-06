@@ -1,0 +1,7 @@
+{
+  "RawImageLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/Images/Raw",
+  "CleanedImageLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/Images/Cleaned",
+  "OpenSlideBinLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/OpenSlide/bin",
+  "CropParameters" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Code/ParameterFiles/TrainingDataCroppingParams.json",
+  "RawCropLevel" : 4
+}
