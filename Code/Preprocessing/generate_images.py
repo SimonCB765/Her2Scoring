@@ -58,13 +58,8 @@ def main(arguments):
     except FileExistsError:
         # Directory already exists.
         pass
-    fileCropParameters = arguments["CropParameters"]  # The location containing the parameters for cropping each image.
+    cropParameters = arguments["CropParameters"]  # The parameters for cropping each image.
     rawCropLevel = arguments["RawCropLevel"]  # The resolution level at which you want to perform the cropping.
-
-    # Load crop parameters.
-    fidCropParams = open(fileCropParameters, 'r')
-    cropParameters = json.load(fidCropParams)
-    fidCropParams.close()
 
     # Process images.
     for i in os.listdir(dirInputImages):
