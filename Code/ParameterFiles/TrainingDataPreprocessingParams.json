@@ -6,63 +6,63 @@
   "CropParameters" : {
     "1_her2" : {
       "BackgroundThreshold" : 220,
-      "CropCoordinates" : {"Start" : {"X" : 0.0, "Y" : 0.0}, "End" : {"X" : 1.0, "Y" : 1.0}},
+      "CropCoordinates" : {"Left" : {"X" : 0.0, "Y" : 0.0}, "Right" : {"X" : 1.0, "Y" : 1.0}},
       "MaxFilter" : 9,
       "ObjectsToKeep" : [0, 1, 2, 3, 4, 5],
       "Visualise" : true
     },
     "4_her2" : {
       "BackgroundThreshold" : 220,
-      "CropCoordinates" : {"Start" : {"X" : 0.0, "Y" : 0.0}, "End" : {"X" : 1.0, "Y" : 1.0}},
+      "CropCoordinates" : {"Left" : {"X" : 0.0, "Y" : 0.0}, "Right" : {"X" : 1.0, "Y" : 1.0}},
       "MaxFilter" : 9,
       "ObjectsToKeep" : [0, 1, 2, 3, 4, 5],
       "Visualise" : true
     },
     "6_her2" : {
       "BackgroundThreshold" : 220,
-      "CropCoordinates" : {"Start" : {"X" : 0.0, "Y" : 0.0}, "End" : {"X" : 1.0, "Y" : 1.0}},
+      "CropCoordinates" : {"Left" : {"X" : 0.0, "Y" : 0.0}, "Right" : {"X" : 1.0, "Y" : 1.0}},
       "MaxFilter" : 9,
       "ObjectsToKeep" : [0, 1, 2, 3, 4, 5],
       "Visualise" : true
     },
     "9_her2" : {
       "BackgroundThreshold" : 220,
-      "CropCoordinates" : {"Start" : {"X" : 0.0, "Y" : 0.0}, "End" : {"X" : 1.0, "Y" : 1.0}},
+      "CropCoordinates" : {"Left" : {"X" : 0.0, "Y" : 0.0}, "Right" : {"X" : 1.0, "Y" : 1.0}},
       "MaxFilter" : 9,
       "ObjectsToKeep" : [0, 1, 2, 3, 4, 5],
       "Visualise" : true
     },
     "11_her2" : {
       "BackgroundThreshold" : 220,
-      "CropCoordinates" : {"Start" : {"X" : 0.0, "Y" : 0.0}, "End" : {"X" : 1.0, "Y" : 1.0}},
+      "CropCoordinates" : {"Left" : {"X" : 0.0, "Y" : 0.0}, "Right" : {"X" : 1.0, "Y" : 1.0}},
       "MaxFilter" : 9,
       "ObjectsToKeep" : [0, 1, 2, 3, 4, 5],
       "Visualise" : true
     },
     "12_her2" : {
       "BackgroundThreshold" : 220,
-      "CropCoordinates" : {"Start" : {"X" : 0.0, "Y" : 0.0}, "End" : {"X" : 1.0, "Y" : 1.0}},
+      "CropCoordinates" : {"Left" : {"X" : 0.0, "Y" : 0.0}, "Right" : {"X" : 1.0, "Y" : 1.0}},
       "MaxFilter" : 9,
       "ObjectsToKeep" : [0, 1, 2, 3, 4, 5],
       "Visualise" : true
     },
     "13_her2" : {
       "BackgroundThreshold" : 220,
-      "CropCoordinates" : {"Start" : {"X" : 0.0, "Y" : 0.0}, "End" : {"X" : 1.0, "Y" : 1.0}},
+      "CropCoordinates" : {"Left" : {"X" : 0.0, "Y" : 0.0}, "Right" : {"X" : 1.0, "Y" : 1.0}},
       "MaxFilter" : 9,
       "ObjectsToKeep" : [0, 1, 2, 3, 4, 5],
       "Visualise" : true
     },
     "14_her2" : {
       "BackgroundThreshold" : 220,
-      "CropCoordinates" : {"Start" : {"X" : 0.0, "Y" : 0.0}, "End" : {"X" : 1.0, "Y" : 1.0}},
+      "CropCoordinates" : {"Left" : {"X" : 0.0, "Y" : 0.0}, "Right" : {"X" : 1.0, "Y" : 1.0}},
       "MaxFilter" : 9,
       "ObjectsToKeep" : [0, 1, 2, 3, 4, 5],
       "Visualise" : true
     },
     "15_her2" : {
       "BackgroundThreshold" : 220,
-      "CropCoordinates" : {"Start" : {"X" : 0.0, "Y" : 0.0}, "End" : {"X" : 1.0, "Y" : 1.0}},
+      "CropCoordinates" : {"Left" : {"X" : 0.0, "Y" : 0.0}, "Right" : {"X" : 1.0, "Y" : 1.0}},
       "MaxFilter" : 9,
       "ObjectsToKeep" : [0, 1, 2, 3, 4, 5],
       "Visualise" : true

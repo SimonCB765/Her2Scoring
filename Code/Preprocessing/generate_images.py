@@ -91,15 +91,15 @@ def main(arguments):
             desiredSlideDimensions = slide.level_dimensions[rawCropLevel]  # Dimensions of the desired level image.
 
             # Determine the pixel in the full size level 0 image where the crop should start.
-            fullCropStart = (cropParams["CropCoordinates"]["Start"]["X"] * fullSlideDimensions[0],
-                             cropParams["CropCoordinates"]["Start"]["Y"] * fullSlideDimensions[1])
+            fullCropStart = (cropParams["CropCoordinates"]["Left"]["X"] * fullSlideDimensions[0],
+                             cropParams["CropCoordinates"]["Left"]["Y"] * fullSlideDimensions[1])
             fullCropStart = [int(i) for i in fullCropStart]
 
             # Determine the pixel in the desired level image where the crop should start and end.
-            desiredCropStart = (cropParams["CropCoordinates"]["Start"]["X"] * desiredSlideDimensions[0],
-                                cropParams["CropCoordinates"]["Start"]["Y"] * desiredSlideDimensions[1])
-            desiredCropEnd = (cropParams["CropCoordinates"]["End"]["X"] * desiredSlideDimensions[0],
-                              cropParams["CropCoordinates"]["End"]["Y"] * desiredSlideDimensions[1])
+            desiredCropStart = (cropParams["CropCoordinates"]["Left"]["X"] * desiredSlideDimensions[0],
+                                cropParams["CropCoordinates"]["Left"]["Y"] * desiredSlideDimensions[1])
+            desiredCropEnd = (cropParams["CropCoordinates"]["Right"]["X"] * desiredSlideDimensions[0],
+                              cropParams["CropCoordinates"]["Right"]["Y"] * desiredSlideDimensions[1])
 
             # Determine the dimensions of the crop in the desired level image.
             cropDimensions = (desiredCropEnd[0] - desiredCropStart[0], desiredCropEnd[1] - desiredCropStart[1])
