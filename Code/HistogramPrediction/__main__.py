@@ -1,4 +1,4 @@
-"""File to initiate the running of the cell percentage prediction."""
+"""File to initiate the running of the image histogram-based training."""
 
 # Python imports.
 import json
