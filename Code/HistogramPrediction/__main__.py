@@ -5,7 +5,7 @@ import json
 import sys
 
 # User imports.
-import Her2Prediction.histogram_predictions
+import HistogramPrediction.histogram_predictions
 import Utilities.json_to_ascii
 
 # Globals
@@ -20,4 +20,4 @@ if PYVERSION < 3:
     parsedArgs = Utilities.json_to_ascii.json_to_ascii(parsedArgs)
 readParams.close()
 
-Her2Prediction.histogram_predictions.main(parsedArgs)
+HistogramPrediction.histogram_predictions.main(parsedArgs)

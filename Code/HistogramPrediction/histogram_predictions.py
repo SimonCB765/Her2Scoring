@@ -30,23 +30,26 @@ def main(arguments):
     # Extract the ground truth values.
     caseNumbers = []
     her2Scores = []
+    stainingPercent = []
     with open(fileGroundTruth, 'r') as fidGroundTruth:
         fidGroundTruth.readline()  # Strip off the header.
         for line in fidGroundTruth:
             chunks = (line.strip()).split('\t')
-            caseNumbers.append(chunks[0])
+            caseNumbers.append(int(chunks[0]))
             her2Scores.append(int(chunks[1]))
-
-    print(caseNumbers)
-    print(her2Scores)
-
-    # Go through each image, generate the histogram of all pixels intensities from 0-255 and then remove
-    # the intensity from the background. This is your feature vector.
+            stainingPercent.append(float(chunks[2]))
+    groundTruth = np.array([caseNumbers, her2Scores, stainingPercent])
 
     # Determine the mask for removing the background pixel color.
     backgroundMask = np.array([(False if i == backgroundColor else True) for i in range(256)])
 
-    for i in os.listdir(dirImages):
+    # Initalise the matrix that will hold the histogram data.
+    # There will be one row per image and 258 columns (one for each of the non-background pixel values plus one
+    # for the case number, one for the Her2 score and one for the percentage of stained cells).
+    dataMatrix = np.empty((len(os.listdir(dirImages)), 258))
+
+    # Generate the matrix of histogram feature vectors.
+    for ind, i in enumerate(os.listdir(dirImages)):
         # Read in the file.
         filePath = "{0:s}/{1:s}".format(dirImages, i)
         image = scipy.ndimage.imread(filePath)
@@ -56,3 +59,20 @@ def main(arguments):
 
         # Strip out the background color.
         histogram = histogram[backgroundMask]
+
+        # Convert histogram to relative values.
+        histogram = histogram / histogram.sum()
+
+        # Determine the number case identifier for the image.
+        caseID = int(i.split('_')[0])
+
+        # Create the feature vector.
+        caseGroundTruth = groundTruth[:, groundTruth[0, :] == caseID]  # The ground truth values for this image.
+        featureVector = np.empty(258)
+        featureVector[0] = caseID
+        featureVector[1] = caseGroundTruth[1]
+        featureVector[2] = caseGroundTruth[2]
+        featureVector[3:] = histogram
+
+        # Add the feature vector to the data matrix.
+        dataMatrix[ind, :] = featureVector
