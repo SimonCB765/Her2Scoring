@@ -12,7 +12,7 @@ from matplotlib import pyplot as plt
 
 
 def main(fileImage, maxRotation=0, maxShear=(0,), maxTranslation=(0,), maxScale=(1,), scaleUpProb=(0.5,),
-         inversionProb=(0.0,), backgroundColor=255):
+         jointScale=False, inversionProb=(0.0,), backgroundColor=255):
     """
 
     Transformations are treated as symmetric. A maximum rotation of 45 degrees is therefore a maximum rotation
@@ -22,6 +22,9 @@ def main(fileImage, maxRotation=0, maxShear=(0,), maxTranslation=(0,), maxScale=
 
     we would need to center the image at (0, 0) first. However, at present
     # doing this causes the image to clip, and so the full transformation is done in non-clipping steps.
+
+    joint scaling will cause the x axis scalingto be calcualted and then used for both axes (any entry in the maxScale
+    list/tuple except the first will be ignroed)
 
     """
 
@@ -49,9 +52,14 @@ def main(fileImage, maxRotation=0, maxShear=(0,), maxTranslation=(0,), maxScale=
         scaleXDown = random.random() < scaleUpProb[0]
         scaleMatrix[0, 0] = (1. / scaleX) if scaleXDown else scaleX
     if maxYScale > 1:
-        scaleY = random.uniform(1, maxYScale)
-        scaleYDown = random.random() < (scaleUpProb[1] if len(scaleUpProb) > 1 else scaleUpProb[0])
-        scaleMatrix[1, 1] = (1. / scaleY) if scaleYDown else scaleY
+        if jointScale:
+            # Scale the Y axis the same as the X axis.
+            scaleMatrix[1, 1] = scaleMatrix[0, 0]
+        else:
+            # Potentially scale the axes differently.
+            scaleY = random.uniform(1, maxYScale)
+            scaleYDown = random.random() < (scaleUpProb[1] if len(scaleUpProb) > 1 else scaleUpProb[0])
+            scaleMatrix[1, 1] = (1. / scaleY) if scaleYDown else scaleY
 
     # Create the rotation matrix.
     rotateMatrix = np.identity(3)
@@ -95,39 +103,80 @@ def main(fileImage, maxRotation=0, maxShear=(0,), maxTranslation=(0,), maxScale=
                                         np.dot(rotateMatrix,
                                                np.dot(scaleMatrix, centerMatrix)))))
 
+    plt.imshow(imageArray, cmap="Greys_r")
+    plt.show()
+
     # Transform the image. Perform operations sequentially in order to gain the desired control over the output.
+    transformedImage = np.empty(imageArray.shape)  # Create the correctly sized transformed image.
+    transformedImage.fill(backgroundColor)  # Fill the transformed image with only background.
 
     # Scale the image. The goal is to 'zoom' in or out of the image while keeping the array the same size.
-    # the scaling therefore can't be performed with ndimage.zoom as this messes with the aspect ratio and changes the
-    # size of the array. Using affine_transform also doesn't work, as the 'zoom' is performed with respect to the
-    # origin (0, 0), and we want it done wth respect to the center of the image.
+    # This works by first zooming, and then placing the portion of the zoomed image desired into a correctly sized
+    # (and possibly padded) array.
+    # For example, if the zoom factor is 2, then the result of scipy.ndimage.zoom will be an array that is twice
+    # the desired size. In order to resize this, the central portion of the zoomed array is taken and placed into
+    # the transformed array. If the zoom factor was a fraction, then the entire zoomed image would be placed into
+    # the transformed array with background padding around it.
+    zoomedImage = scipy.ndimage.zoom(imageArray, [scaleMatrix[1, 1], scaleMatrix[0, 0]], cval=backgroundColor)  # Zoom.
+    transSlice = {'X': [0, transformedImage.shape[1]],
+                  'Y': [0, transformedImage.shape[0]]}  # Slice of the transformed image where the zoom will be placed.
+    zoomSlice = {'X': [0, zoomedImage.shape[1]],
+                 'Y': [0, zoomedImage.shape[0]]}  # Slice of the zoomed image to copy into the transformed image.
+    pixelDifference = [abs(i - j) for i, j in zip(imageArray.shape, zoomedImage.shape)]  # Image size difference.
+    if scaleMatrix[0, 0] < 1:
+        # The zoomed image is smaller along the X axis than it should be. Take the zoomed image and center it along
+        # the transformed image's X axis.
+        transSlice['X'][0] = int(np.floor(pixelDifference[1] / 2))
+        transSlice['X'][1] = transSlice['X'][0] + zoomedImage.shape[1]
+    elif scaleMatrix[0, 0] > 1:
+        # The zoomed image is larger along the X axis than it should be. Take the zoomed image and remove some of
+        # the left and right columns of pixels.
+        zoomSlice['X'][0] = int(np.floor(pixelDifference[1] / 2))
+        zoomSlice['X'][1] = zoomSlice['X'][0] + transformedImage.shape[1]
+    if scaleMatrix[1, 1] < 1:
+        # The zoomed image is smaller along the Y axis than it should be. Take the zoomed image and center it along
+        # the transformed image's Y axis.
+        transSlice['Y'][0] = int(np.floor(pixelDifference[0] / 2))
+        transSlice['Y'][1] = transSlice['Y'][0] + zoomedImage.shape[0]
+    elif scaleMatrix[1, 1] > 1:
+        # The zoomed image is larger along the Y axis than it should be. Take the zoomed image and remove some of
+        # the top and bottom of pixels.
+        zoomSlice['Y'][0] = int(np.floor(pixelDifference[0] / 2))
+        zoomSlice['Y'][1] = zoomSlice['Y'][0] + transformedImage.shape[0]
+    transformedImage[transSlice['Y'][0]:transSlice['Y'][1], transSlice['X'][0]:transSlice['X'][1]] = \
+        zoomedImage[zoomSlice['Y'][0]:zoomSlice['Y'][1], zoomSlice['X'][0]:zoomSlice['X'][1]]
 
-    # do some sort of map coordinates thing in order to take the visible section of the image (i.e. imageArray)
-    # and map the coordinates to anoher array so that when scaling the image down, the whole image fits inside the
-    # middle of the new array (padding with background color),
-    # and when zooming out you map the middle pixels of the imageArray to the whole new array.
-
-    transformedImage = imageArray#, scaleMatrix[:2, :2], cval=backgroundColor)
+    plt.imshow(transformedImage, cmap="Greys_r")
+    plt.show()
 
     # Rotate the image. This must be done with ndimage.rotate rather than ndimage.affine_transform as we want to rotate
     # around the center of the image. If we used affine_transform, then the rotation would be performed around (0, 0).
     # This could be countered by setting the center of the image to (0, 0), but then the rotation clips the image.
     transformedImage = scipy.ndimage.rotate(transformedImage, degreeRotation, cval=backgroundColor)
 
-    # TODO - decide whether to crop the image back to the original size here
-    # TODO - this would cut out some of the foreground (possibly), but I can' crop down the image after scaling
-    # TODO - or I will ruin the scaling when I scale down (as all added padding will be removed)
+    plt.imshow(transformedImage, cmap="Greys_r")
+    plt.show()
 
-    # Shear the image.
-    # this can be done with affine_transform as we don't need this to occur aat the center of the image
+    # Shear the image. This can be done with affine_transform as we don't need it to occur at the center of the image.
+    transformedImage = scipy.ndimage.affine_transform(transformedImage, shearMatrix[:2, :2], cval=backgroundColor)
 
-    # TODO - decide whether to crop the image back to the original size here
-    # TODO - this would cut out some of the foreground (possibly), but I can' crop down the image after scaling
-    # TODO - or I will ruin the scaling when I scale down (as all added padding will be removed)
+    plt.imshow(transformedImage, cmap="Greys_r")
+    plt.show()
+
+    # Crop out any excess rows and columns that consist only of background pixels.
+    backgroundRows = np.all(transformedImage == backgroundColor, axis=1)
+    backgroundCols = np.all(transformedImage == backgroundColor, axis=0)
+    transformedImage = transformedImage[~backgroundRows, :][:, ~backgroundCols]
+    transformedImage = transformedImage[~backgroundRows, :][:, ~backgroundCols]
 
     # Invert the image.
+    if inversionMatrix[0, 0] == 1:
+        transformedImage = np.fliplr(transformedImage)
+    if inversionMatrix[1, 1] == -1:
+        transformedImage = np.flipud(transformedImage)
 
     # Translate the image.
+    transformedImage = scipy.ndimage.shift(transformedImage, translationMatrix[:2, 2], cval=backgroundColor)
 
     plt.imshow(imageArray, cmap="Greys_r")
     plt.show()
