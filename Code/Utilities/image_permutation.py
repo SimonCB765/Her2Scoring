@@ -26,20 +26,16 @@ def main(fileImage, maxRotation=0, maxShear=(0,), maxTranslation=(0,), maxScale=
     joint scaling will cause the x axis scalingto be calcualted and then used for both axes (any entry in the maxScale
     list/tuple except the first will be ignroed)
 
+    Perform operations sequentially in order to gain the desired control over the output.
+
     """
 
     # Load the image and determine its size.
     imageArray = scipy.ndimage.imread(fileImage)
     numRows, numCols = imageArray.shape
 
-    # Center the image on the origin (0, 0). This is necessary if you are using the full affine transformation matrix
-    # at once, as the rotation and shearing are with respect to the origin. As we want the rotation to be around
-    # the center of the image, we would need to translate the image and center it on (0, 0) first.
-    centerMatrix = np.identity(3)
-    centerMatrix[:2, 2] = numRows / 2., numCols / 2.
-
     # Create the scale matrix.
-    # The difficulty with this is ensuring that the probability of scaling up and down is the same.
+    # The difficulty with this is ensuring that the probability of scaling up and down is similar.
     # For example, if maxXScale == 5, then the probability of getting a scale value in (1, 5] is far greater
     # than the probability of getting a value in the range [0, 1). As the maximum scale factor gets bigger, it
     # only becomes more likely that scaling up will occur. Avoid this by uncoupling the scaling factor choice from
@@ -96,17 +92,10 @@ def main(fileImage, maxRotation=0, maxShear=(0,), maxTranslation=(0,), maxScale=
     inversionMatrix[1, 1] = -1 if isXInverted else 1
     inversionMatrix[0, 0] = -1 if isYInverted else 1
 
-    # Create the affine matrix.
-    affineMatrix = np.dot(inversionMatrix,
-                          np.dot(translationMatrix,
-                                 np.dot(shearMatrix,
-                                        np.dot(rotateMatrix,
-                                               np.dot(scaleMatrix, centerMatrix)))))
-
     plt.imshow(imageArray, cmap="Greys_r")
     plt.show()
 
-    # Transform the image. Perform operations sequentially in order to gain the desired control over the output.
+    # Create the transformed image.
     transformedImage = np.empty(imageArray.shape)  # Create the correctly sized transformed image.
     transformedImage.fill(backgroundColor)  # Fill the transformed image with only background.
 
@@ -169,22 +158,22 @@ def main(fileImage, maxRotation=0, maxShear=(0,), maxTranslation=(0,), maxScale=
     transformedImage = transformedImage[~backgroundRows, :][:, ~backgroundCols]
     transformedImage = transformedImage[~backgroundRows, :][:, ~backgroundCols]
 
+    plt.imshow(transformedImage, cmap="Greys_r")
+    plt.show()
+
     # Invert the image.
     if inversionMatrix[0, 0] == 1:
         transformedImage = np.fliplr(transformedImage)
     if inversionMatrix[1, 1] == -1:
         transformedImage = np.flipud(transformedImage)
 
+    plt.imshow(transformedImage, cmap="Greys_r")
+    plt.show()
+
     # Translate the image.
     transformedImage = scipy.ndimage.shift(transformedImage, translationMatrix[:2, 2], cval=backgroundColor)
 
-    plt.imshow(imageArray, cmap="Greys_r")
-    plt.show()
-    newImg = scipy.ndimage.rotate(imageArray, 45, cval=backgroundColor)
-    plt.imshow(newImg, cmap="Greys_r")
-    plt.show()
-    newImg = scipy.ndimage.affine_transform(newImg, np.array([[2, 0],[0, 0.5]]), cval=backgroundColor)
-    plt.imshow(newImg, cmap="Greys_r")
+    plt.imshow(transformedImage, cmap="Greys_r")
     plt.show()
 
-    return imageArray
+    return transformedImage
