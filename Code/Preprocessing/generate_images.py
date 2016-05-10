@@ -118,8 +118,9 @@ def main(arguments):
             if cropParams["Visualise"]:
                 fig = plt.figure()
                 axes = fig.add_subplot(1, 2, 1)
-                axes.set_title("Input Image")
-                plt.imshow(np.array(thumbnailGrey), cmap="Greys_r")
+                axes.set_title("Raw Image at Desired Level")
+                desiredLevelImage = slide.read_region((0, 0), rawCropLevel, slide.level_dimensions[rawCropLevel])
+                plt.imshow(np.array(desiredLevelImage), cmap="Greys_r")
                 axes = fig.add_subplot(1, 2, 2)
                 axes.set_title("Cropped Image")
                 plt.imshow(rawGreyImageArray, cmap='Greys_r')
