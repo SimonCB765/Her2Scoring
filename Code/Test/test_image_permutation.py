@@ -25,5 +25,6 @@ class CompletionTest(unittest.TestCase):
             image = Utilities.image_permutation.main(
                 runParams["ImageLocation"], maxRotation=runParams["MaxRotation"], maxShear=runParams["MaxShear"],
                 maxTranslation=runParams["MaxTranslation"], maxScale=runParams["MaxScale"],
-                scaleUpProb=runParams["ScaleUpProb"], inversionProb=runParams["InversionProb"])
+                scaleUpProb=runParams["ScaleUpProb"],jointScale=runParams["JointScale"],
+                inversionProb=runParams["InversionProb"])
 

@@ -12,10 +12,10 @@ dirImages = os.path.join(dirConfigFile, dirPermutation)
 completionNoPermute = {
     "Test1": {
         "ImageLocation": os.path.join(dirImages, "Test1.png"), "MaxRotation": 0, "MaxShear": (0,),
-        "MaxTranslation": (0,), "MaxScale": (0,), "ScaleUpProb": (0.5,), "InversionProb": (0.0,)
+        "MaxTranslation": (0,), "MaxScale": (0,), "ScaleUpProb": (0.5,), "JointScale": True, "InversionProb": (0.0,)
     },
     "Test2": {
         "ImageLocation": os.path.join(dirImages, "Test2.png"), "MaxRotation": 0, "MaxShear": (0,),
-        "MaxTranslation": (0,), "MaxScale": (0,), "ScaleUpProb": (0.5,), "InversionProb": (0.0,)
+        "MaxTranslation": (0,), "MaxScale": (0,), "ScaleUpProb": (0.5,), "JointScale": True,  "InversionProb": (0.0,)
     }
 }
