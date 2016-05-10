@@ -10,6 +10,7 @@ import numpy as np
 import openslide
 import PIL.Image
 import PIL.ImageOps
+import scipy.ndimage
 
 # User imports.
 from . import create_image_mask
@@ -117,13 +118,18 @@ def main(arguments):
             # Visualise the crop compared to the original thumbnail.
             if cropParams["Visualise"]:
                 fig = plt.figure()
-                axes = fig.add_subplot(1, 2, 1)
+                axes = fig.add_subplot(1, 3, 1)
                 axes.set_title("Raw Image at Desired Level")
                 desiredLevelImage = slide.read_region((0, 0), rawCropLevel, slide.level_dimensions[rawCropLevel])
-                plt.imshow(np.array(desiredLevelImage), cmap="Greys_r")
-                axes = fig.add_subplot(1, 2, 2)
+                desiredLevelImage = np.array(desiredLevelImage)
+                plt.imshow(desiredLevelImage, cmap="Greys_r")
+                axes = fig.add_subplot(1, 3, 2)
                 axes.set_title("Cropped Image")
                 plt.imshow(rawGreyImageArray, cmap='Greys_r')
+                axes = fig.add_subplot(1, 3, 3)
+                axes.set_title("Pixel Intensities")
+                histogram = scipy.ndimage.histogram(desiredLevelImage, 0, 255, 256)
+                plt.plot(np.arange(256), histogram)
                 plt.show()
 
             # Create the mask needed to clean up the image. Do this by identifying the regions in the original image
