@@ -72,8 +72,8 @@ def main(fileImage, maxRotation=0, maxShear=(0,), maxTranslation=(0,), maxScale=
     degreeShearY = random.uniform(0, maxYShear * 2) - maxYShear
     radianShearX = np.deg2rad(degreeShearX)
     radianShearY = np.deg2rad(degreeShearY)
-    shearMatrix[0, 1] = np.tan(radianShearX)
-    shearMatrix[1, 0] = np.tan(radianShearY)
+    shearMatrix[0, 1] = np.tan(radianShearY)
+    shearMatrix[1, 0] = np.tan(radianShearX)
 
     # Create the translation matrix.
     translationMatrix = np.identity(3)
@@ -135,6 +135,7 @@ def main(fileImage, maxRotation=0, maxShear=(0,), maxTranslation=(0,), maxScale=
     transformedImage[transSlice['Y'][0]:transSlice['Y'][1], transSlice['X'][0]:transSlice['X'][1]] = \
         zoomedImage[zoomSlice['Y'][0]:zoomSlice['Y'][1], zoomSlice['X'][0]:zoomSlice['X'][1]]
 
+    print(scaleMatrix)
     plt.imshow(transformedImage, cmap="Greys_r")
     plt.show()
 
@@ -143,12 +144,14 @@ def main(fileImage, maxRotation=0, maxShear=(0,), maxTranslation=(0,), maxScale=
     # This could be countered by setting the center of the image to (0, 0), but then the rotation clips the image.
     transformedImage = scipy.ndimage.rotate(transformedImage, degreeRotation, cval=backgroundColor)
 
+    print(degreeRotation)
     plt.imshow(transformedImage, cmap="Greys_r")
     plt.show()
 
     # Shear the image. This can be done with affine_transform as we don't need it to occur at the center of the image.
     transformedImage = scipy.ndimage.affine_transform(transformedImage, shearMatrix[:2, :2], cval=backgroundColor)
 
+    print(shearMatrix)
     plt.imshow(transformedImage, cmap="Greys_r")
     plt.show()
 
@@ -156,23 +159,24 @@ def main(fileImage, maxRotation=0, maxShear=(0,), maxTranslation=(0,), maxScale=
     backgroundRows = np.all(transformedImage == backgroundColor, axis=1)
     backgroundCols = np.all(transformedImage == backgroundColor, axis=0)
     transformedImage = transformedImage[~backgroundRows, :][:, ~backgroundCols]
-    transformedImage = transformedImage[~backgroundRows, :][:, ~backgroundCols]
 
     plt.imshow(transformedImage, cmap="Greys_r")
     plt.show()
 
     # Invert the image.
-    if inversionMatrix[0, 0] == 1:
+    if inversionMatrix[0, 0] == -1:
         transformedImage = np.fliplr(transformedImage)
     if inversionMatrix[1, 1] == -1:
         transformedImage = np.flipud(transformedImage)
 
+    print(inversionMatrix)
     plt.imshow(transformedImage, cmap="Greys_r")
     plt.show()
 
     # Translate the image.
     transformedImage = scipy.ndimage.shift(transformedImage, translationMatrix[:2, 2], cval=backgroundColor)
 
+    print(translationMatrix)
     plt.imshow(transformedImage, cmap="Greys_r")
     plt.show()
 
