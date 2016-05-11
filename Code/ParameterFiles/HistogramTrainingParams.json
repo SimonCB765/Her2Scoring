@@ -1,5 +1,0 @@
-{
-  "ImageLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/Images/Cleaned/Greyscale/CroppedImages",
-  "BackgroundThreshold" : 220,
-  "GroundTruth" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/GroundTruth.tsv"
-}

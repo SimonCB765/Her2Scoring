@@ -9,7 +9,7 @@ import sys
 import numpy as np
 
 
-def main(dataset, targetIndex, numPartitions=1, isStratified=False):
+def main(dataset, target, numPartitions=1, isStratified=False):
     """Partition a dataset into CV folds.
 
     :param dataset:
@@ -32,7 +32,9 @@ def main(dataset, targetIndex, numPartitions=1, isStratified=False):
         # Used stratified partitioning.
 
         # Determine the target vector.
-        targets = dataset[:, targetIndex]
+        if isinstance(target, numbers.Integral):
+            # If the target provided is an integer, then treat it as the index of the column containing the targets.
+            target = dataset[:, target]
 
         # Create the array to hold the partition.
         partition = np.empty(dataset.shape[0])
