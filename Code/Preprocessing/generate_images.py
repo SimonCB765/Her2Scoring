@@ -129,7 +129,7 @@ def main(arguments):
                 axes = fig.add_subplot(1, 3, 3)
                 axes.set_title("Pixel Intensities")
                 histogram = scipy.ndimage.histogram(desiredLevelImage, 0, 255, 256)
-                plt.plot(np.arange(256), histogram)
+                plt.plot(np.arange(256), histogram, color="black")
                 plt.show()
 
             # Create the mask needed to clean up the image. Do this by identifying the regions in the original image
