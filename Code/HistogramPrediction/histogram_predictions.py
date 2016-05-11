@@ -25,7 +25,7 @@ def main(arguments):
         print("Image location {0:s} is not a directory.".format(dirImages))
         sys.exit()
     fileGroundTruth = arguments["GroundTruth"]
-    backgroundColor = arguments["BackgroundColor"]
+    backgroundThreshold = arguments["BackgroundThreshold"]
 
     # Extract the ground truth values.
     caseNumbers = []
@@ -34,19 +34,20 @@ def main(arguments):
     with open(fileGroundTruth, 'r') as fidGroundTruth:
         fidGroundTruth.readline()  # Strip off the header.
         for line in fidGroundTruth:
+            print(line)
             chunks = (line.strip()).split('\t')
             caseNumbers.append(int(chunks[0]))
             her2Scores.append(int(chunks[1]))
             stainingPercent.append(float(chunks[2]))
     groundTruth = np.array([caseNumbers, her2Scores, stainingPercent])
 
-    # Determine the mask for removing the background pixel color.
-    backgroundMask = np.array([(False if i == backgroundColor else True) for i in range(256)])
+    # Determine the mask for removing the background pixel colors.
+    backgroundMask = np.array([(False if i >= backgroundThreshold else True) for i in range(256)])
 
     # Initalise the matrix that will hold the histogram data.
-    # There will be one row per image and 258 columns (one for each of the non-background pixel values plus one
+    # There will be one row per image and one column for each of the non-background pixel values, one
     # for the case number, one for the Her2 score and one for the percentage of stained cells).
-    dataMatrix = np.empty((len(os.listdir(dirImages)), 258))
+    dataMatrix = np.empty((len(os.listdir(dirImages)), (backgroundMask.sum() + 3)))
 
     # Generate the matrix of histogram feature vectors.
     for ind, i in enumerate(os.listdir(dirImages)):
@@ -60,7 +61,7 @@ def main(arguments):
         # Strip out the background color.
         histogram = histogram[backgroundMask]
 
-        # Convert histogram to relative values.
+        # Convert histogram to relative values. This will remove issues with image sizes being different.
         histogram = histogram / histogram.sum()
 
         # Determine the number case identifier for the image.
@@ -68,11 +69,7 @@ def main(arguments):
 
         # Create the feature vector.
         caseGroundTruth = groundTruth[:, groundTruth[0, :] == caseID]  # The ground truth values for this image.
-        featureVector = np.empty(258)
-        featureVector[0] = caseID
-        featureVector[1] = caseGroundTruth[1]
-        featureVector[2] = caseGroundTruth[2]
-        featureVector[3:] = histogram
-
-        # Add the feature vector to the data matrix.
-        dataMatrix[ind, :] = featureVector
+        dataMatrix[ind, 0] = caseID
+        dataMatrix[ind, 1] = caseGroundTruth[1]
+        dataMatrix[ind, 2] = caseGroundTruth[2]
+        dataMatrix[ind, 3:] = histogram
