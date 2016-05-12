@@ -124,7 +124,6 @@ def main(arguments):
     if foldsToUse < 2:
         # Train on the entire dataset and predict on the test observations.
         for params in paramList:
-            print(params)
             # Create the model.
             model = modelChoices[modelToUse]["Model"](**params)
 
@@ -132,4 +131,27 @@ def main(arguments):
             model.fit(trainingDataMatrix, targetVector)
     else:
         # Train using cross validation. With two folds this is equivalent to hold out testing.
-        pass
+
+        # Partition the dataset.
+        partition = Utilities.partition_dataset.main(trainingDataMatrix, targetVector, foldsToUse,
+                                                     modelChoices[modelToUse]["Stratified"])
+
+        # Perform cross validation.
+        for params in paramList:
+            for i in range(foldsToUse):
+                # Determine the subset of data to use for training and testing in this fold.
+                trainingExamples = partition != i
+                trainingDataSubset = trainingDataMatrix[trainingExamples]
+                trainingTargetVector = targetVector[trainingExamples]
+                testingExamples = partition == i
+                testingDataSubset = trainingDataMatrix[testingExamples]
+                testingTargetVector = targetVector[testingExamples]
+
+                # Create the model.
+                model = modelChoices[modelToUse]["Model"](**params)
+
+                # Train the model.
+                model.fit(trainingDataSubset, trainingTargetVector)
+
+                # Test the model.
+                model.predict(testingDataSubset)
