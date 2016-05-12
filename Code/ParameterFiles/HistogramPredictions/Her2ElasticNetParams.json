@@ -3,11 +3,19 @@
   "BackgroundThreshold" : 220,
   "GroundTruth" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/GroundTruth.tsv",
   "TargetHer2" : true,
+<<<<<<< HEAD
   "CVFolds" : 0,
+=======
+  "CVFolds" : 0.
+>>>>>>> 01bc26430ef8c5f6a7652def0cc7ed235406be52
   "ResultsLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Results/Her2/Histogram/MultinomialRegression",
   "ModelToUse" : "ElasticNet",
   "ModelParameters" : {
     "alpha" : [0.00001, 0.0001, 0.001, 0.01, 0.1, 1, 10],
+<<<<<<< HEAD
     "l1_ratio" : [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+=======
+    "l1_ratio" : [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+>>>>>>> 01bc26430ef8c5f6a7652def0cc7ed235406be52
   }
 }
