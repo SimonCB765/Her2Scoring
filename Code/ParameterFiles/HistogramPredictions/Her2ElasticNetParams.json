@@ -1,0 +1,13 @@
+{
+  "ImageLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/Images/Cleaned/Greyscale/CroppedImages",
+  "BackgroundThreshold" : 220,
+  "GroundTruth" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Data/GroundTruth.tsv",
+  "TargetHer2" : true,
+  "CVFolds" : 0,
+  "ResultsLocation" : "C:/Users/Simon/Documents/MyResearch/Her2Scoring/Results/Her2/Histogram/MultinomialRegression",
+  "ModelToUse" : "ElasticNet",
+  "ModelParameters" : {
+    "alpha" : [0.00001, 0.0001, 0.001, 0.01, 0.1, 1, 10],
+    "l1_ratio" : [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+  }
+}
